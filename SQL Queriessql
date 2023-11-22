@@ -1,0 +1,44 @@
+select years,sum(critic_score) as critic_score ,sum(user_score) as user_score from
+(Select extract(year from year) as years,critic_score,user_score from game_sales a join reviews b
+on a.game=b.game)
+group by years
+order by critic_score desc;
+
+SELECT platform, SUM(sales) AS total_sales
+FROM (
+  SELECT a.platform,
+         CASE WHEN NA_SALES IS NOT NULL THEN NA_SALES
+         when EU_SALES is not null then EU_SALES
+         when JP_SALES is not null then EU_SALES
+         when Other_SALES is not null then EU_SALES
+         when Global_SALES is not null then EU_SALES
+         ELSE 0 END AS sales
+  FROM game_sales a
+  JOIN game_sales_global b ON a.publisher = b.publisher
+) c
+GROUP BY platform
+ORDER BY total_sales desc;
+-----
+select genre,sum(sales) as sales from (
+SELECT genre,
+         CASE WHEN NA_SALES IS NOT NULL THEN NA_SALES
+         when EU_SALES is not null then EU_SALES
+         when JP_SALES is not null then EU_SALES
+         when Other_SALES is not null then EU_SALES
+         when Global_SALES is not null then EU_SALES
+         ELSE 0 END AS sales
+From game_sales_global ) c
+GROUP BY genre
+ORDER BY sales desc
+FETCH FIRST 10 ROWS ONLY;
+----
+
+select years,COUNT(game) as game_count from (
+SELECT EXTRACT(YEAR FROM a.year) as years, b.game
+ FROM game_sales a
+  JOIN game_sales_global b ON a.publisher = b.publisher
+   GROUP BY EXTRACT(YEAR FROM a.year), b.game) c
+GROUP BY years
+ORDER BY count(game) desc;
+----
+

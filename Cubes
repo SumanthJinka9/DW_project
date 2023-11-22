@@ -1,0 +1,35 @@
+SELECT
+    platform,developer,year,
+    SUM(games_sold) AS TotalSales
+FROM
+    game_sales
+GROUP BY
+    cube( platform,developer,year)
+ORDER BY
+    TotalSales desc;
+---
+
+SELECT
+    game,
+    AVG(Critic_Score) AS AvgCriticScore,
+    AVG(User_Score) AS AvgUserScore
+FROM
+    reviews
+GROUP BY
+    cube(game)
+ORDER BY
+    AvgCriticScore DESC, AvgUserScore DESC;
+    ----
+    
+    SELECT
+    year,
+    num_games,
+    MAX(avg_Critic_Score) AS MaxCriticScore
+FROM
+    top_critic_years_four_games
+GROUP BY
+    year,num_games
+ORDER BY
+    MaxCriticScore DESC;
+    
+---
